@@ -62,13 +62,22 @@ public class PanelShadow extends JPanel {
 
     @Override
     protected void paintComponent(Graphics grphcs) {
-        createShadow(grphcs);
+        if (renderImage == null) {
+            createRenderImage();
+        }
+        grphcs.drawImage(renderImage, 0, 0, null);
         super.paintComponent(grphcs);
     }
 
-    private void createShadow(Graphics grphcs) {
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+        super.setBounds(x, y, width, height);
+        createRenderImage();
+    }
+
+    private void createRenderImage() {
         renderImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = (Graphics2D) grphcs.create();
+        Graphics2D g2 = renderImage.createGraphics();
         int size = shadowSize * 2;
         int x;
         int y;
@@ -103,6 +112,7 @@ public class PanelShadow extends JPanel {
         g2.drawImage(render.createShadow(img), 0, 0, null);
         g2.drawImage(img, x, y, null);
         g2.dispose();
+        System.out.println("gg");
     }
 
     private void createBackground(Graphics2D g2, int width, int height) {
