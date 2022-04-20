@@ -53,7 +53,10 @@ public class Test extends javax.swing.JFrame {
             }
         });
 
-        panelShadow1.setBackground(new java.awt.Color(41, 46, 65));
+        panelShadow1.setBackground(new java.awt.Color(20, 23, 39));
+        panelShadow1.setColorGradient(new java.awt.Color(37, 42, 63));
+        panelShadow1.setGradientType(javaswingdev.panel.PanelShadow.GradientType.DIAGONAL_2);
+        panelShadow1.setRadius(5);
 
         javax.swing.GroupLayout panelShadow1Layout = new javax.swing.GroupLayout(panelShadow1);
         panelShadow1.setLayout(panelShadow1Layout);

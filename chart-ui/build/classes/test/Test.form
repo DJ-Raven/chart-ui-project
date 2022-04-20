@@ -105,8 +105,15 @@
         <Container class="javaswingdev.panel.PanelShadow" name="panelShadow1">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="41" green="2e" red="29" type="rgb"/>
+              <Color blue="27" green="17" red="14" type="rgb"/>
             </Property>
+            <Property name="colorGradient" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="3f" green="2a" red="25" type="rgb"/>
+            </Property>
+            <Property name="gradientType" type="javaswingdev.panel.PanelShadow$GradientType" editor="org.netbeans.modules.form.editors.EnumEditor">
+              <Value id="DIAGONAL_2"/>
+            </Property>
+            <Property name="radius" type="int" value="5"/>
           </Properties>
 
           <Layout>
