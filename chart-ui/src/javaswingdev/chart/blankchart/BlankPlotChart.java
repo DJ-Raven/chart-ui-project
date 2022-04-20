@@ -73,7 +73,7 @@ public class BlankPlotChart extends JComponent {
     public BlankPlotChart() {
         setBackground(Color.WHITE);
         setOpaque(false);
-        setForeground(new Color(100, 100, 100));
+        setForeground(new Color(120, 120, 120));
         setBorder(new EmptyBorder(35, 10, 10, 10));
         init();
     }

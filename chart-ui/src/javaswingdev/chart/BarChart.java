@@ -93,13 +93,13 @@ public class BarChart extends JComponent {
             public void renderSeries(BlankPlotChart chart, Graphics2D g2, SeriesSize size, int index) {
                 double totalSeriesWidth = (seriesSize * legends.size()) + (seriesSpace * (legends.size() - 1));
                 double x = (size.getWidth() - totalSeriesWidth) / 2;
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
                 for (int i = 0; i < legends.size(); i++) {
                     ModelLegend legend = legends.get(i);
                     double seriesValues = chart.getSeriesValuesOf(model.get(index).getValues()[i], size.getHeight());
                     int t = model.size() - index;
                     double seriesValuesAnimation = seriesValues * ease(animate, t);
-                    GradientPaint gra = new GradientPaint(0, 0, new Color(253, 77, 77), 0, getHeight(), new Color(24, 14, 204));
+                    GradientPaint gra = new GradientPaint(0, 0, Color.decode("#f5af19"), 0, getHeight(), Color.decode("#f12711"));
                     RoundRectangle2D r2d = new RoundRectangle2D.Double(size.getX() + x, size.getY() + size.getHeight() - seriesValuesAnimation, seriesSize, seriesValuesAnimation, seriesSize, seriesSize);
                     g2.setPaint(gra);
                     g2.fill(r2d);
