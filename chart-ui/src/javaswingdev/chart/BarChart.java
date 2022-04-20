@@ -110,9 +110,9 @@ public class BarChart extends JComponent {
                     Rectangle2D s = getLabelWidth(labelText, g2);
                     float space = 3;
                     float spaceTop = 5;
-                    g2.setColor(new Color(150, 150, 150));
+                    g2.setColor(new Color(70, 70, 70));
                     g2.fill(new RoundRectangle2D.Double(labelLocation.getX() - s.getWidth() / 2 - 3, labelLocation.getY() - s.getHeight() - space * 2 - spaceTop, s.getWidth() + space * 2, s.getHeight() + space * 2, 10, 10));
-                    g2.setColor(new Color(248, 248, 248));
+                    g2.setColor(getForeground());
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
                     float sx = (float) (labelLocation.getX() - s.getWidth() / 2);
                     float sy = (float) (labelLocation.getY() - spaceTop - space * 2);
@@ -169,7 +169,9 @@ public class BarChart extends JComponent {
     }
 
     private void startAnimateLabel(Point oldLocation, Point newLocation) {
-        animatorLabel.stop();
+        if (animatorLabel.isRunning()) {
+            animatorLabel.stop();
+        }
         animatorLabel.removeTarget(targetLabel);
         targetLabel = new PropertySetter(this, "changeLocation", oldLocation, newLocation);
         animatorLabel.addTarget(targetLabel);

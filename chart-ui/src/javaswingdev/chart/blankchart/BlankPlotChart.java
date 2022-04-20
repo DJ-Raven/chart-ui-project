@@ -117,7 +117,7 @@ public class BlankPlotChart extends JComponent {
         double spaceText = 5;
         Stroke stroke = g2.getStroke();
         Composite composite = g2.getComposite();
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
         for (int i = 0; i <= niceScale.getMaxTicks(); i++) {
             double y = getHeight() - locationY;
             g2.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0));
