@@ -2,7 +2,6 @@ package javaswingdev.chart;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
@@ -45,6 +44,7 @@ public class BarChart extends JComponent {
 
     private void init() {
         setLayout(new MigLayout("fill", "[fill]", "[fill]"));
+        setForeground(new Color(200, 200, 200));
         createBlankChart();
         createChart();
         createAnimatorChart();
@@ -107,14 +107,16 @@ public class BarChart extends JComponent {
                 }
                 if (labelText != null) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-                    Dimension s = getLabelWidth(labelText, g2);
-                    int space = 3;
-                    int spaceTop = 5;
+                    Rectangle2D s = getLabelWidth(labelText, g2);
+                    float space = 3;
+                    float spaceTop = 5;
                     g2.setColor(new Color(150, 150, 150));
-                    g2.fill(new RoundRectangle2D.Double(labelLocation.x - s.getWidth() / 2 - 3, labelLocation.y - s.getHeight() - space * 2 - spaceTop, s.getWidth() + space * 2, s.getHeight() + space * 2, 10, 10));
+                    g2.fill(new RoundRectangle2D.Double(labelLocation.getX() - s.getWidth() / 2 - 3, labelLocation.getY() - s.getHeight() - space * 2 - spaceTop, s.getWidth() + space * 2, s.getHeight() + space * 2, 10, 10));
                     g2.setColor(new Color(248, 248, 248));
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-                    g2.drawString(labelText, labelLocation.x - s.width / 2, labelLocation.y - spaceTop - space * 2);
+                    float sx = (float) (labelLocation.getX() - s.getWidth() / 2);
+                    float sy = (float) (labelLocation.getY() - spaceTop - space * 2);
+                    g2.drawString(labelText, sx, sy);
                 }
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
             }
@@ -212,10 +214,10 @@ public class BarChart extends JComponent {
         }
     }
 
-    private Dimension getLabelWidth(String text, Graphics2D g2) {
+    private Rectangle2D getLabelWidth(String text, Graphics2D g2) {
         FontMetrics ft = g2.getFontMetrics();
         Rectangle2D r2 = ft.getStringBounds(text, g2);
-        return new Dimension((int) r2.getWidth(), (int) r2.getHeight());
+        return r2;
     }
 
     @Override

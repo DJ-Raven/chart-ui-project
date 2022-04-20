@@ -48,7 +48,7 @@ public class PanelShadow extends JPanel {
     private BufferedImage renderImage;
     private ShadowType shadowType = ShadowType.BOT_LEFT;
     private int shadowSize = 6;
-    private float shadowOpacity = 0.25f;
+    private float shadowOpacity = 0.2f;
     private Color shadowColor = Color.BLACK;
     //  Gradient Option
     private GradientType gradientType = GradientType.HORIZONTAL;
@@ -112,7 +112,6 @@ public class PanelShadow extends JPanel {
         g2.drawImage(render.createShadow(img), 0, 0, null);
         g2.drawImage(img, x, y, null);
         g2.dispose();
-        System.out.println("gg");
     }
 
     private void createBackground(Graphics2D g2, int width, int height) {

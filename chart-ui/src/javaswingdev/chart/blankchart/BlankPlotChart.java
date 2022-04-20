@@ -2,7 +2,6 @@ package javaswingdev.chart.blankchart;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -71,9 +70,6 @@ public class BlankPlotChart extends JComponent {
     private BlankPlotChatRender blankPlotChatRender;
 
     public BlankPlotChart() {
-        setBackground(Color.WHITE);
-        setOpaque(false);
-        setForeground(new Color(120, 120, 120));
         setBorder(new EmptyBorder(35, 10, 10, 10));
         init();
     }
@@ -97,7 +93,6 @@ public class BlankPlotChart extends JComponent {
 
     @Override
     protected void paintComponent(Graphics grphcs) {
-        super.paintComponent(grphcs);
         if (niceScale != null) {
             Graphics2D g2 = (Graphics2D) grphcs.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -108,6 +103,7 @@ public class BlankPlotChart extends JComponent {
             renderSeries(g2);
             g2.dispose();
         }
+        super.paintComponent(grphcs);
     }
 
     private void createLine(Graphics2D g2) {
