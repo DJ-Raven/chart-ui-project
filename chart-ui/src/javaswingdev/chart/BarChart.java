@@ -22,21 +22,22 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 public class BarChart extends JComponent {
 
     private final DecimalFormat df = new DecimalFormat("#,##0.##");
     private final List<ModelLegend> legends = new ArrayList<>();
     private final List<ModelChart> model = new ArrayList<>();
-    private final Point labelLocation = new Point();
+    private Point labelLocation = new Point();
     private final int seriesSize = 10;
     private final int seriesSpace = 10;
     private Animator animator;
     private Animator animatorLabel;
+    private TimingTarget targetLabel;
     private float animate;
-    private float animateLabel;
     private String labelText;
-    private String mouseIndex = "";
+    private int overIndex = -1;
 
     public BarChart() {
         init();
@@ -65,20 +66,10 @@ public class BarChart extends JComponent {
     }
 
     private void createAnimatorLabel() {
-        TimingTarget target = new TimingTargetAdapter() {
-            @Override
-            public void begin() {
-                animateLabel = 0f;
-            }
-
-            @Override
-            public void timingEvent(float fraction) {
-                animateLabel = fraction;
-                repaint();
-            }
-        };
-        animatorLabel = new Animator(350, target);
+        animatorLabel = new Animator(350);
         animatorLabel.setResolution(0);
+        animator.setAcceleration(0.5f);
+        animator.setDeceleration(0.5f);
     }
 
     private void createBlankChart() {
@@ -115,15 +106,14 @@ public class BarChart extends JComponent {
                     x += seriesSpace + seriesSize;
                 }
                 if (labelText != null) {
-
-                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, animateLabel * 0.3f));
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                     Dimension s = getLabelWidth(labelText, g2);
                     int space = 3;
                     int spaceTop = 5;
                     g2.setColor(new Color(150, 150, 150));
                     g2.fill(new RoundRectangle2D.Double(labelLocation.x - s.getWidth() / 2 - 3, labelLocation.y - s.getHeight() - space * 2 - spaceTop, s.getWidth() + space * 2, s.getHeight() + space * 2, 10, 10));
                     g2.setColor(new Color(248, 248, 248));
-                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, animateLabel));
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
                     g2.drawString(labelText, labelLocation.x - s.width / 2, labelLocation.y - spaceTop - space * 2);
                 }
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
@@ -151,13 +141,13 @@ public class BarChart extends JComponent {
                     if (r2d.contains(evt.getPoint())) {
                         double data = model.get(index).getValues()[i];
                         labelText = df.format(data);
-                        labelLocation.setLocation((int) (size.getX() + x + s), (int) (size.getY() + size.getHeight() - seriesValues));
-
-                        String mi = index + "" + i;
-                        if (!mouseIndex.equals(mi)) {
-                            startAnimateLabel();
+                        int seriesIndex = toIndex(index, i);
+                        if (overIndex != seriesIndex) {
+                            Point newPoint = new Point((int) (size.getX() + x + s), (int) (size.getY() + size.getHeight() - seriesValues));
+                            Point oldPoint = overIndex != -1 ? labelLocation : new Point(newPoint.x, newPoint.y + 10);
+                            startAnimateLabel(oldPoint, newPoint);
+                            overIndex = seriesIndex;
                         }
-                        mouseIndex = mi;
                         return true;
                     }
                     x += seriesSpace + seriesSize;
@@ -172,15 +162,21 @@ public class BarChart extends JComponent {
         return (float) v;
     }
 
-    private void startAnimateLabel() {
-        if (animatorLabel.isRunning()) {
-            float f = animatorLabel.getTimingFraction();
-            animatorLabel.stop();
-            animatorLabel.setStartFraction(1f - f);
-        } else {
-            animatorLabel.setStartFraction(0f);
-        }
+    private int toIndex(int index, int i) {
+        return index * legends.size() + i;
+    }
+
+    private void startAnimateLabel(Point oldLocation, Point newLocation) {
+        animatorLabel.stop();
+        animatorLabel.removeTarget(targetLabel);
+        targetLabel = new PropertySetter(this, "changeLocation", oldLocation, newLocation);
+        animatorLabel.addTarget(targetLabel);
         animatorLabel.start();
+    }
+
+    public void setChangeLocation(Point point) {
+        labelLocation = point;
+        repaint();
     }
 
     public void addLegend(String name, Color color) {
@@ -210,6 +206,7 @@ public class BarChart extends JComponent {
 
     public void start() {
         labelText = null;
+        overIndex = -1;
         if (!animator.isRunning()) {
             animator.start();
         }
@@ -225,7 +222,7 @@ public class BarChart extends JComponent {
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
         labelText = null;
-        mouseIndex = "";
+        overIndex = -1;
     }
 
     private BlankPlotChart blankPlotChart;
