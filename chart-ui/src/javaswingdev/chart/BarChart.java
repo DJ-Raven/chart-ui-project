@@ -17,6 +17,7 @@ import javaswingdev.chart.blankchart.BlankPlotChart;
 import javaswingdev.chart.blankchart.BlankPlotChatRender;
 import javaswingdev.chart.blankchart.SeriesSize;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -43,10 +44,11 @@ public class BarChart extends JComponent {
     }
 
     private void init() {
-        setLayout(new MigLayout("fill", "[fill]", "[fill]"));
+        setLayout(new MigLayout("fill,inset 0", "[fill]", "[fill,100%]10[]"));
         setForeground(new Color(200, 200, 200));
         createBlankChart();
         createChart();
+        createPanelLegend();
         createAnimatorChart();
         createAnimatorLabel();
     }
@@ -74,7 +76,7 @@ public class BarChart extends JComponent {
 
     private void createBlankChart() {
         blankPlotChart = new BlankPlotChart();
-        add(blankPlotChart);
+        add(blankPlotChart, "wrap");
     }
 
     private void createChart() {
@@ -99,7 +101,7 @@ public class BarChart extends JComponent {
                     double seriesValues = chart.getSeriesValuesOf(model.get(index).getValues()[i], size.getHeight());
                     int t = model.size() - index;
                     double seriesValuesAnimation = seriesValues * ease(animate, t);
-                    GradientPaint gra = new GradientPaint(0, 0, Color.decode("#f5af19"), 0, getHeight(), Color.decode("#f12711"));
+                    GradientPaint gra = new GradientPaint(0, 0, legend.getColor1(), 0, getHeight(), legend.getColor2());
                     RoundRectangle2D r2d = new RoundRectangle2D.Double(size.getX() + x, size.getY() + size.getHeight() - seriesValuesAnimation, seriesSize, seriesValuesAnimation, seriesSize, seriesSize);
                     g2.setPaint(gra);
                     g2.fill(r2d);
@@ -159,6 +161,13 @@ public class BarChart extends JComponent {
         });
     }
 
+    private void createPanelLegend() {
+        panelLegend = new JPanel();
+        panelLegend.setOpaque(false);
+        panelLegend.setLayout(new MigLayout("filly,center,inset 0"));
+        add(panelLegend);
+    }
+
     private float ease(float f, int t) {
         double v = 1 - Math.pow(1 - f, t);
         return (float) v;
@@ -183,12 +192,14 @@ public class BarChart extends JComponent {
         repaint();
     }
 
-    public void addLegend(String name, Color color) {
-        ModelLegend data = new ModelLegend(name, color);
+    public void addLegend(String name, Color color1, Color color2) {
+        ModelLegend data = new ModelLegend(name, color1, color2);
         legends.add(data);
-        //  panelLegend.add(new LegendItem(data));
-        //  panelLegend.repaint();
-        //  panelLegend.revalidate();
+        LegendItem legend = new LegendItem(data);
+        legend.setForeground(getForeground());
+        panelLegend.add(legend);
+        panelLegend.repaint();
+        panelLegend.revalidate();
     }
 
     public void addData(ModelChart data) {
@@ -230,4 +241,5 @@ public class BarChart extends JComponent {
     }
 
     private BlankPlotChart blankPlotChart;
+    private JPanel panelLegend;
 }

@@ -12,22 +12,32 @@ public class ModelLegend {
         this.name = name;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getColor1() {
+        return color1;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setColor1(Color color1) {
+        this.color1 = color1;
     }
 
-    public ModelLegend(String name, Color color) {
+    public Color getColor2() {
+        return color2;
+    }
+
+    public void setColor2(Color color2) {
+        this.color2 = color2;
+    }
+
+    public ModelLegend(String name, Color color1, Color color2) {
         this.name = name;
-        this.color = color;
+        this.color1 = color1;
+        this.color2 = color2;
     }
 
     public ModelLegend() {
     }
 
     private String name;
-    private Color color;
+    private Color color1;
+    private Color color2;
 }

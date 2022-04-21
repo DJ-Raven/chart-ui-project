@@ -7,10 +7,10 @@ public class Test extends javax.swing.JFrame {
 
     public Test() {
         initComponents();
-        chart.addLegend("Income", new Color(12, 84, 175));
-        chart.addLegend("Expense", new Color(54, 4, 143));
-        chart.addLegend("Profit", new Color(5, 125, 0));
-        chart.addLegend("Cost", new Color(186, 37, 37));
+        chart.addLegend("Income", Color.decode("#f5af19"), Color.decode("#f12711"));
+        chart.addLegend("Expense", Color.decode("#f5af19"), Color.decode("#f12711"));
+        chart.addLegend("Profit", Color.decode("#f5af19"), Color.decode("#f12711"));
+        chart.addLegend("Cost", Color.decode("#f5af19"), Color.decode("#f12711"));
         chart.addData(new ModelChart("January", new double[]{500, 200, 80, 89}));
         chart.addData(new ModelChart("February", new double[]{600, 750, 90, 150}));
         chart.addData(new ModelChart("March", new double[]{200, 350, 460, 900}));
@@ -64,8 +64,8 @@ public class Test extends javax.swing.JFrame {
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelShadow1Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                .addGap(17, 17, 17))
         );
         panelShadow1Layout.setVerticalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
