@@ -14,6 +14,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +95,8 @@ public class BlankPlotChart extends JComponent {
     @Override
     protected void paintComponent(Graphics grphcs) {
         if (niceScale != null) {
-            Graphics2D g2 = (Graphics2D) grphcs.create();
+            BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = img.createGraphics();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
             createLine(g2);
@@ -102,6 +104,7 @@ public class BlankPlotChart extends JComponent {
             createLabelText(g2);
             renderSeries(g2);
             g2.dispose();
+            grphcs.drawImage(img, 0, 0, null);
         }
         super.paintComponent(grphcs);
     }

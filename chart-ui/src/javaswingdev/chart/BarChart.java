@@ -2,6 +2,7 @@ package javaswingdev.chart;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
@@ -17,6 +18,7 @@ import javaswingdev.chart.blankchart.BlankPlotChart;
 import javaswingdev.chart.blankchart.BlankPlotChatRender;
 import javaswingdev.chart.blankchart.SeriesSize;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
@@ -30,7 +32,7 @@ public class BarChart extends JComponent {
     private final List<ModelLegend> legends = new ArrayList<>();
     private final List<ModelChart> model = new ArrayList<>();
     private Point labelLocation = new Point();
-    private final int seriesSize = 10;
+    private final int seriesSize = 8;
     private final int seriesSpace = 10;
     private Animator animator;
     private Animator animatorLabel;
@@ -38,17 +40,19 @@ public class BarChart extends JComponent {
     private float animate;
     private String labelText;
     private int overIndex = -1;
+    private Color displayTextColor = new Color(200, 200, 200);
+    private Color displayTextBackground = new Color(70, 70, 70);
 
     public BarChart() {
         init();
     }
 
     private void init() {
-        setLayout(new MigLayout("fill,inset 0", "[fill]", "[fill,100%]10[]"));
-        setForeground(new Color(200, 200, 200));
+        setLayout(new MigLayout("fill, inset 0", "[fill]", "[]10[fill,100%]5"));
+        setForeground(new Color(120, 120, 120));
+        createPanelLegend();
         createBlankChart();
         createChart();
-        createPanelLegend();
         createAnimatorChart();
         createAnimatorLabel();
     }
@@ -76,7 +80,7 @@ public class BarChart extends JComponent {
 
     private void createBlankChart() {
         blankPlotChart = new BlankPlotChart();
-        add(blankPlotChart, "wrap");
+        add(blankPlotChart);
     }
 
     private void createChart() {
@@ -112,9 +116,9 @@ public class BarChart extends JComponent {
                     Rectangle2D s = getLabelWidth(labelText, g2);
                     float space = 3;
                     float spaceTop = 5;
-                    g2.setColor(new Color(70, 70, 70));
+                    g2.setColor(getDisplayTextBackground());
                     g2.fill(new RoundRectangle2D.Double(labelLocation.getX() - s.getWidth() / 2 - 3, labelLocation.getY() - s.getHeight() - space * 2 - spaceTop, s.getWidth() + space * 2, s.getHeight() + space * 2, 10, 10));
-                    g2.setColor(getForeground());
+                    g2.setColor(displayTextColor);
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
                     float sx = (float) (labelLocation.getX() - s.getWidth() / 2);
                     float sy = (float) (labelLocation.getY() - spaceTop - space * 2);
@@ -164,8 +168,12 @@ public class BarChart extends JComponent {
     private void createPanelLegend() {
         panelLegend = new JPanel();
         panelLegend.setOpaque(false);
-        panelLegend.setLayout(new MigLayout("filly,center,inset 0"));
-        add(panelLegend);
+        panelLegend.setLayout(new MigLayout("filly, center, inset 0", "[]10[]"));
+        labelTitle = new JLabel();
+        labelTitle.setForeground(new Color(229, 229, 229));
+        labelTitle.setFont(labelTitle.getFont().deriveFont(Font.BOLD, 15));
+        panelLegend.add(labelTitle, "push, gap left 10");
+        add(panelLegend, "wrap");
     }
 
     private float ease(float f, int t) {
@@ -227,6 +235,53 @@ public class BarChart extends JComponent {
         }
     }
 
+    public void resetAnimation() {
+        labelText = null;
+        overIndex = -1;
+        animate = 0;
+        repaint();
+    }
+
+    public void setTitle(String title) {
+        labelTitle.setText(title);
+    }
+
+    public String getTitle() {
+        return labelTitle.getText();
+    }
+
+    public void setTitleFont(Font font) {
+        labelTitle.setFont(font);
+    }
+
+    public Font getTitleFont() {
+        return labelTitle.getFont();
+    }
+
+    public void setTitleColor(Color color) {
+        labelTitle.setForeground(color);
+    }
+
+    public Color getTitleColor() {
+        return labelTitle.getForeground();
+    }
+
+    public Color getDisplayTextColor() {
+        return displayTextColor;
+    }
+
+    public void setDisplayTextColor(Color displayTextColor) {
+        this.displayTextColor = displayTextColor;
+    }
+
+    public Color getDisplayTextBackground() {
+        return displayTextBackground;
+    }
+
+    public void setDisplayTextBackground(Color displayTextBackground) {
+        this.displayTextBackground = displayTextBackground;
+    }
+
     private Rectangle2D getLabelWidth(String text, Graphics2D g2) {
         FontMetrics ft = g2.getFontMetrics();
         Rectangle2D r2 = ft.getStringBounds(text, g2);
@@ -242,4 +297,5 @@ public class BarChart extends JComponent {
 
     private BlankPlotChart blankPlotChart;
     private JPanel panelLegend;
+    private JLabel labelTitle;
 }
